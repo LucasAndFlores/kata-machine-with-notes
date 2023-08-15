@@ -320,9 +320,134 @@ find(node, value): boolean
 The cost of this operation will be the height of the tree or log n if we have a balanced tree.
 
 
+##### Heap
+The simple way to define a binary tree (heap) is that every child or grand child is smaller (maxHeap) or larger (minHeap) than the current node. 
+- Whenever a node is added, we adjust the tree.
+- Whenever a node is deleted, we adjust the tree. 
+- There is no traversing on this type of tree. 
+- Also, you implement priority queue using this data structure
 
+About min heap, the top value must be the smallest and if you have repeated values, they need to be children of the nodes.
 
+Let's consider this minHeap, and both of their children should be larger than the parent node:
+```
+             50
+           /    \
+          71     100
+         /  \   /   \
+        101   80 200  105
+```
+To add a new node, we go to the final spot of our tree, and we add the node. Let's say that we added 3. 
+```
+             50
+           /    \
+          71     100
+         /  \   /   \
+        101 80 200  105
+       / 
+      3
+```
+The heap is not ordered. So since is not ordered, we need to heapify up, checking if the value added is smallest than their parent. 
+So, 3 is smaller than 101? yes. 3 is smaller than 71? yes. 3 is smaller than 50? yes, so 3 will become the root of the tree.
 
+```
+             3
+           /    \
+          50     100
+         /  \   /   \
+        71  80 200  105
+       /  \
+     101  200
+```
+To delete the an item, we should pop out 3. After this, we will take last node of the tree (200), delete from there and put on the root. now, we heapify down.
+Since it is a min heap, we gonna take the minimum of the two children and compare against that. 
+So, 200 is the root now, which one is the smaller one? 50 or 100? 50. So 200 is greater than the smallest (50) of our two children? yes, so we swap. So 50 is the root now.
+Again, which one is the smallest? 71 or 80? 71. So we swap 200 by 71. and so on. 
+The final structure should be like this: 
 
+```
+             50
+           /    \
+          71     100
+         /  \   /   \
+       101  80 200  105
+       /  
+     200  
+```
+We maybe can re-imagine how we store this tree. Instead of the common structure (nodes), maybe we can try to add an index on each node
 
+```
+             50 (0)
+           /    \
+          71(1)  100(2)
+         /  \   /   \
+     (3)101(4)80 200(5)  105(6)
+       /  
+     200(7)  
 
+     Since we have an index, maybe we can create an array with this criteria:
+     [50,71,100,101,80,200,101,200]
+```
+Since this is an array, maybe could be hard to indetify the parent/child relationship.
+But we can use a formula to discovery the index child node. 
+Let's say that we want to know the children of the number 100:
+
+```
+Child of the number 100 at the index 2
+What if we multiply the index of this number (100) by two and +1 and +2?
+2*2 + 1 = 5 - the item in this index is 200
+2*2 + 2 = 6 - the item in this index is 105
+```
+
+With this, we can heapify down and discover the child, but what if we want to discover the parent? heapify up?
+Let's say that we want to discover the parent of the number 80:
+
+```
+Parent of the number 80 at the index 4
+What if we do -1 from the index of this number (80) and divide by 2?
+(4 - 1) / 1 = 1 - the item in this index is 71.
+If we are using a languange that divide an integer and can return a float, we need to use the floor operator, this is why is 1 and not 1.5
+```
+
+And if you need to insert a new item, you should insert at the end of the array.
+
+##### Graphs
+All trees are graphs, but not all graphs is a tree.
+Terminology used in graphs: 
+- cycle: When you start at node(x), follow the links, and end back at node(x)
+- acyclic: A graph that contains no cycles
+- connected: When every node has a path to another node
+- directed: When there is no direction to the connections. Maybe twitter.
+- undirected: Think Facebook, friend of friend but that is not your friend, for example. 
+- wheighted: The edges have weight associated with them. Maps and traffic, for example.
+- dag: Directed acyclic graph
+
+Implementation terms: 
+node(vertex): a point or vertex on the graph
+edge: the connection betxit two nodes.
+
+We have many ways to implement a graph, but the two major ways to implement is using adjacent list or adjacent matrix.
+In the adjacent list, we will have a list (array, maybe), where every node will be represented by the index, with some information about the edges.
+The field `to` means the index of the element, and weight is the distance until that node.
+pseudo-code: 
+```
+[
+    node-0: [{to: 1, weight: 10}, {to: 2, weight: 100}],
+    node-1: [],
+    node-2: [{to: 1, weight: 5},{to: 3, weight: 15}],
+    node-3: [{to: 0, weight: 10}],
+]
+```
+
+If we want to represent a adjacent matrix, this could be the pseudo-code: 
+```
+   0 1 2 3
+ [
+0 [0,10,100,0]
+1 [0,0,0,0]
+2 [0,5,0,15]
+3 [10,0,0,0]
+ ]
+```
+
+We can implement BFS or DFS in a graph
