@@ -458,5 +458,7 @@ The objective should be find the shortest path from one node to all others. No n
 It requires a previous array with all seen nodes, the previous node and distances. The nodes will be the same used as DFS or BFS, starts with false. The previous it will be the same too.
 The distances array will be filled with all distances, except our source node.
 From the source node, we will try to find the closest possible node to the source and this is the shortest distance!
-If the distance from you or the distance to me plus the distance you is shorter than any other distance we have seen thus far, we found newer shortest path to that node 
-
+If the distance from you or the distance to me plus the distance you is shorter
+than any other distance we have seen thus far, we found newer shortest path to
+that node 
+Running time: O(log V (V+E)), if you use the map to keep where you already visited
